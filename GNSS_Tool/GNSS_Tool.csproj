@@ -18,7 +18,7 @@
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AndroidUseLatestPlatformSdk>false</AndroidUseLatestPlatformSdk>
-    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v9.0</TargetFrameworkVersion>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
@@ -46,8 +46,9 @@
     <WarningLevel>4</WarningLevel>
     <AndroidManagedSymbols>true</AndroidManagedSymbols>
     <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
-    <AndroidLinkMode>SdkOnly</AndroidLinkMode>
+    <AndroidLinkMode>None</AndroidLinkMode>
     <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+    <BundleAssemblies>true</BundleAssemblies>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,6 +58,52 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainActivity.cs" />
+    <Compile Include="Parser\BluetoothDevice.Android.cs" />
+    <Compile Include="Parser\BufferedStreamDevice.cs" />
+    <Compile Include="Parser\IMultiPartMessage.cs" />
+    <Compile Include="Parser\NmeaDevice.cs" />
+    <Compile Include="Parser\NmeaFileDevice.cs" />
+    <Compile Include="Parser\Nmea\Galileo\Gagsv.cs" />
+    <Compile Include="Parser\Nmea\Gga.cs" />
+    <Compile Include="Parser\Nmea\Gll.cs" />
+    <Compile Include="Parser\Nmea\Glonass\Glgns.cs" />
+    <Compile Include="Parser\Nmea\Glonass\Glgsv.cs" />
+    <Compile Include="Parser\Nmea\Glonass\Glzda.cs" />
+    <Compile Include="Parser\Nmea\Gns.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gngga.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gngll.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gngns.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gngsa.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gngst.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gnrmc.cs" />
+    <Compile Include="Parser\Nmea\Gnss\Gnzda.cs" />
+    <Compile Include="Parser\Nmea\Gps\Garmin\PGRME.cs" />
+    <Compile Include="Parser\Nmea\Gps\Garmin\PGRMZ.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPBOD.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPGGA.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPGLL.cs" />
+    <Compile Include="Parser\Nmea\Gps\Gpgns.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPGSA.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPGST.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPGSV.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPRMB.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPRMC.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPRTE.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPVTG.cs" />
+    <Compile Include="Parser\Nmea\Gps\GPZDA.cs" />
+    <Compile Include="Parser\Nmea\Gsa.cs" />
+    <Compile Include="Parser\Nmea\Gst.cs" />
+    <Compile Include="Parser\Nmea\Gsv.cs" />
+    <Compile Include="Parser\Nmea\LaserRange\LaserRangeMessage.cs" />
+    <Compile Include="Parser\Nmea\LaserRange\LaserTech\PLTIT.cs" />
+    <Compile Include="Parser\Nmea\LaserRange\Trimble\PTNLA.cs" />
+    <Compile Include="Parser\Nmea\LaserRange\Trimble\PTNLB.cs" />
+    <Compile Include="Parser\Nmea\NmeaMessage.cs" />
+    <Compile Include="Parser\Nmea\Rmc.cs" />
+    <Compile Include="Parser\Nmea\UnknownMessage.cs" />
+    <Compile Include="Parser\Nmea\Zda.cs" />
+    <Compile Include="Parser\StreamDevice.cs" />
+    <Compile Include="Parser\SystemNmeaDevice.Android.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -70,7 +117,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\content_main.axml">
-          <SubType>Designer</SubType>
+      <SubType>Designer</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\dimens.xml" />
