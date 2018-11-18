@@ -8,21 +8,6 @@
 	android:layout_margin="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/activity_main">
-	<TextView
-        android:id="@+id/longitude"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Latitude = " />
-    <TextView
-        android:id="@+id/latitude"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Longitude = " />
-    <TextView
-        android:id="@+id/altitude"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Altitude =" />
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
@@ -37,9 +22,20 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent" />
     </LinearLayout>
+	<TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Update..."
+		android:minLines="3"
+	/>
     <TextView
         android:id="@+id/output"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+		android:text="No Output..."
+		android:maxLines="100"
+		android:scrollbars="vertical"
+		android:gravity="bottom"
+	/>
 </LinearLayout>

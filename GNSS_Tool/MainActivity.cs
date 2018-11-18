@@ -6,8 +6,10 @@ using Android.Support.Design.Widget;
 using Android.Support.V4.App;
 using Android.Support.V4.Content;
 using Android.Support.V7.App;
+using Android.Text.Method;
 using Android.Views;
 using Android.Widget;
+using NLog;
 using NmeaParser.Nmea;
 using System;
 using System.Collections.Generic;
@@ -18,11 +20,15 @@ namespace GNSS_Tool
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private static readonly ILogger LogD = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger LogNmea = LogManager.GetLogger("NMEA");
+
         private Dictionary<string, string> devices = new Dictionary<string, string>();
-        private Queue<NmeaMessage> messages = new Queue<NmeaMessage>(100);
+        private Dictionary<string, string> position = new Dictionary<string, string>();
 
         private NmeaParser.NmeaDevice listener;
-        private TextView tvOutput, tvLat, tvLon, tvAlt;
+        private TextView tvOutput, tvStatus;
+
         // private bool launched;
         private Android.Bluetooth.BluetoothSocket socket;
 
@@ -42,9 +48,9 @@ namespace GNSS_Tool
             fab.Click += FabOnClick;
 
             tvOutput = FindViewById<TextView>(Resource.Id.output);
-            tvLon = FindViewById<TextView>(Resource.Id.longitude);
-            tvLat = FindViewById<TextView>(Resource.Id.latitude);
-            tvAlt = FindViewById<TextView>(Resource.Id.altitude);
+            tvStatus = FindViewById<TextView>(Resource.Id.status);
+            tvStatus.MovementMethod = new ScrollingMovementMethod();
+
 
             devices.Add("System GPS", null);
             var devicePicker = FindViewById<Spinner>(Resource.Id.device_picker);
@@ -59,6 +65,13 @@ namespace GNSS_Tool
             }
             devicePicker.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerDropDownItem, devices.Keys.ToArray());
             devicePicker.SetSelection(0);
+
+            if (ContextCompat.CheckSelfPermission(this, Manifest.Permission.WriteExternalStorage) != Permission.Granted)
+            {
+                ActivityCompat.RequestPermissions(this, new[] { Manifest.Permission.WriteExternalStorage }, 1000);
+            }
+
+            LogD.Debug("Started");
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -182,23 +195,27 @@ namespace GNSS_Tool
             //Start();
         }
 
+
         private void Listener_MessageReceived(object sender, NmeaParser.NmeaMessageReceivedEventArgs e)
         {
             var message = e.Message;
+            var str = message.ToString();
+            LogNmea.Info(str);
+
             RunOnUiThread(() =>
             {
-                if (messages.Count == 100) messages.Dequeue();
-                messages.Enqueue(message);
-                tvOutput.Text = string.Join("\n", messages.Reverse().Select(n => n.ToString()));
+                tvOutput.Append($"\n{str}");
                 if (message is Rmc rmc)
                 {
-                    tvLat.Text = "Latitude = " + rmc.Latitude.ToString("0.0000000");
-                    tvLon.Text = "Longitude = " + rmc.Longitude.ToString("0.0000000");
+                    position["Lat"] = rmc.Latitude.ToString("0.0000000");
+                    position["Lon"] = rmc.Longitude.ToString("0.0000000");
                 }
                 else if (message is Gga gga)
                 {
-                    tvAlt.Text = "Altitude = " + gga.Altitude.ToString() + " " + gga.AltitudeUnits.ToString();
+                    position["Alt"] = gga.Altitude.ToString() + " " + gga.AltitudeUnits.ToString();
                 }
+
+                tvStatus.Text = string.Join('\n', position.Select((kv, i) => $"{kv.Key.PadRight(15, ' ')}:  {kv.Value}"));
             });
         }
     }
