@@ -16,18 +16,31 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="NMEA Device:  " />
+            android:text="NMEA Device:  " 
+			android:fontFamily="monospace"
+		/>
         <Spinner
             android:id="@+id/device_picker"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+			android:fontFamily="monospace"
+		/>
     </LinearLayout>
+	<Space
+		android:layout_width="match_parent"
+		android:layout_height="5dp"
+	/>
 	<TextView
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="No Update..."
 		android:minLines="3"
+		android:fontFamily="monospace"
+	/>
+	<Space
+		android:layout_width="match_parent"
+		android:layout_height="5dp"
 	/>
     <TextView
         android:id="@+id/output"
@@ -37,5 +50,6 @@
 		android:maxLines="100"
 		android:scrollbars="vertical"
 		android:gravity="bottom"
+		android:fontFamily="monospace"
 	/>
 </LinearLayout>

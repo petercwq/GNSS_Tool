@@ -58,7 +58,7 @@ namespace GNSS_Tool
             var adapter = Android.Bluetooth.BluetoothAdapter.DefaultAdapter;
             if (adapter != null)
             {
-                foreach (var d in adapter.BondedDevices.Where(d => d.GetUuids().Where(t => t.Uuid.ToString().Equals("00001101-0000-1000-8000-00805F9B34FB", StringComparison.InvariantCultureIgnoreCase)).Any()))
+                foreach (var d in adapter.BondedDevices.Where(d => { var uuids = d.GetUuids(); return uuids != null && uuids.Any(t => t.Uuid.ToString().Equals("00001101-0000-1000-8000-00805F9B34FB", StringComparison.InvariantCultureIgnoreCase)); }))
                 {
                     devices[d.Name + " " + d.Address] = d.Address;
                 }
@@ -169,6 +169,7 @@ namespace GNSS_Tool
                     socket?.Dispose();
                     socket = null;
                     tvOutput.Text += "\nError opening Bluetooth device:\n" + ex.Message;
+                    LogD.Error(ex);
                 }
             }
 
@@ -205,17 +206,24 @@ namespace GNSS_Tool
             RunOnUiThread(() =>
             {
                 tvOutput.Append($"\n{str}");
-                if (message is Rmc rmc)
+                if (message is Gga gga)
                 {
-                    position["Lat"] = rmc.Latitude.ToString("0.0000000");
-                    position["Lon"] = rmc.Longitude.ToString("0.0000000");
-                }
-                else if (message is Gga gga)
-                {
+                    position["Lat"] = gga.Latitude.ToString("F8");
+                    position["Lon"] = gga.Longitude.ToString("F8");
                     position["Alt"] = gga.Altitude.ToString() + " " + gga.AltitudeUnits.ToString();
+                    // position["Height"] = gga.HeightOfGeoid.ToString() + " " + gga.HeightOfGeoidUnits.ToString();
+                    position["Quality"] = gga.Quality.ToString();
+                    position["Satellites"] = gga.NumberOfSatellites.ToString();
+                    position["StationID"] = gga.DgpsStationId.ToString();
+                    position["HDOP"] = gga.Hdop.ToString();
                 }
-
-                tvStatus.Text = string.Join('\n', position.Select((kv, i) => $"{kv.Key.PadRight(15, ' ')}:  {kv.Value}"));
+                else if (message is Rmc rmc)
+                {
+                    position["Lat"] = rmc.Latitude.ToString("F8");
+                    position["Lon"] = rmc.Longitude.ToString("F8");
+                    position["Speed"] = rmc.Speed.ToString("F2");
+                }
+                tvStatus.Text = string.Join('\n', position.OrderBy(kv => kv.Key).Select(kv => $"{kv.Key.PadRight(15, ' ')}:  {kv.Value}"));
             });
         }
     }
